@@ -1,0 +1,17 @@
+<!-- {{ current_user.is_anonymous() }}
+{{ current_user.is_authenticated() }}
+{{ current_user.get_id() }} -->
+
+{% extends "airflow/model_list.html" %}
+
+{% block list_row_actions %}
+  {% if get_value(row, 'state') == '' %}
+    {% if get_value(row, 'claimant') == '' %}
+      <input type="button" onclick="location.href='/admin/humantask/claim?id={{ get_pk_value(row) }}';" value="Claim" />
+    {% elif (get_value(row, 'claimant') == 'None' and current_user.get_id() is none) or (get_value(row, 'claimant') == current_user.get_id()) %}
+      <input type="button" onclick="location.href='/admin/humantask/release?id={{ get_pk_value(row) }}';" value="Release" />
+      <input type="button" onclick="location.href='/admin/humantask/fail?id={{ get_pk_value(row) }}';" value="Fail" />
+      <input type="button" onclick="location.href='/admin/humantask/complete?id={{ get_pk_value(row) }}';" value="Complete" />
+    {% endif %}
+  {% endif %}   
+{% endblock %}
